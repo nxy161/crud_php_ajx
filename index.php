@@ -201,7 +201,7 @@ include './include/connect.php'
                 ?>
             </div>
             <div class="col-3 m-5" style="margin-top: 5rem!important;">
-                <button type="submit" id="submitSearch" name="submitSearch" class="btn btn-primary">Tìm Kiếm</button>
+                <button type="button" id="submitSearch" name="submitSearch" class="btn btn-primary">Tìm Kiếm</button>
             </div>
         </div>
     </form>
@@ -209,12 +209,9 @@ include './include/connect.php'
         <table id="table" class="table">
 
         </table>
+        <div id="pagination"></div>
     </div>
-    <div class="table m-3">
-        <table id="tableSearch" class="table">
 
-        </table>
-    </div>
 
 
 

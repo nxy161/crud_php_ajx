@@ -38,12 +38,25 @@ function showUser()
                         </tr>
                 </thead>
                 <tbody>';
-    $queryShow = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
+    $queryShowALl = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
                     FROM users AS us 
                     LEFT JOIN groups as gr 
                     ON us.main_group_id = gr.id
                     LEFT JOIN stores as st
-                    ON us.main_store_id  = st.id";
+                    ON us.main_store_id  = st.id
+                    ";
+    $result1 = mysqli_query($conn, $queryShowALl);
+    $numCol = mysqli_num_rows($result1);
+    $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
+    $limit = 10;
+    $offset = ($page - 1) * $limit;
+    $queryShow = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
+    FROM users AS us 
+    LEFT JOIN groups as gr 
+    ON us.main_group_id = gr.id
+    LEFT JOIN stores as st
+    ON us.main_store_id  = st.id
+    Limit $limit offset $offset";
     $result = mysqli_query($conn, $queryShow);
     while ($row = mysqli_fetch_assoc($result)) {
         $value .= ' <tr>
@@ -60,8 +73,27 @@ function showUser()
                        </tr>';
     }
     $value .= '</tbody>';
+    $pagination  = '
+                <nav aria-label="Page navigation example">
+                <ul class="pagination justify-content-center">';
 
-    echo json_encode(['status' => 'success', 'html' => $value]);
+    if ($page > 1) {
+        $pagination .= '<li class="page-item ">
+                    <a href="javascript:void(0)" onclick="display(' . $page -1 . ')" class="page-link">Previous</a></li>';
+    }
+    for ($i = 1; $i <= ceil($numCol / 10); $i++) {
+        $pagination  .= '<li class="page-item" id="' . $i . '"><a href="javascript:void(0)" onclick="display(' . $i . ')" class="page-link">' . $i . '</a></li>';
+    }
+    if ($page < $numCol) {
+        $pagination  .= '<li class="page-item">
+        <a class="page-link" href="javascript:void(0)" onclick="display(' . $page + 1 . ')"">Next</a>
+        </li>';
+    }
+
+    $pagination .= '</ul>
+                </nav>
+                ';
+    echo json_encode(['status' => 'success', 'html' => $value, 'pagination' => $pagination]);
 }
 //<button class="btn btn-group" id="btn_view" data-id="' . $row['id'] . '"><i class="fa-solid fa-eye" style="color:blue;"></i></button>
 
@@ -141,17 +173,17 @@ function searchUser()
                 <tbody>';
     $searchStore = $_POST['storeS'];
     $searchGroup = $_POST['groupS'];
-    $querySearchShow = null;
+    $querySearchShow = "SELECT us.id, 
+    us.name, us.address, us.birthday, st.name as strname, gr.description, us.created FROM users AS us 
+    LEFT JOIN groups as gr 
+    ON us.main_group_id = gr.id
+    LEFT JOIN stores as st
+    ON us.main_store_id  = st.id";
     if ($searchStore == 'all' && $searchGroup == 'all') {
-        $querySearch = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
-        FROM users AS us 
-        LEFT JOIN groups as gr 
-        ON us.main_group_id = gr.id
-        LEFT JOIN stores as st
-        ON us.main_store_id  = st.id";
-        $querySearchShow = $querySearch;
+        $querySearchShow;
     } else if ($searchStore == 'all') {
-        $querySearch = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created, 
+        $querySearch = "  SELECT st.id, gr.id, us.id, 
+        us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
         FROM users AS us 
         LEFT JOIN groups as gr 
         ON us.main_group_id = gr.id
@@ -160,7 +192,8 @@ function searchUser()
         Where gr.id = '$searchGroup'";
         $querySearchShow = $querySearch;
     } else if ($searchGroup == 'all') {
-        $querySearch = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created, 
+        $querySearch = "  SELECT st.id, gr.id, us.id, 
+        us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
         FROM users AS us 
         LEFT JOIN groups as gr 
         ON us.main_group_id = gr.id
@@ -169,7 +202,8 @@ function searchUser()
         Where st.id = '$searchStore'";
         $querySearchShow = $querySearch;
     } else {
-        $querySearch = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created, 
+        $querySearch = "  SELECT st.id, gr.id, us.id, 
+        us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
         FROM users AS us 
         LEFT JOIN groups as gr 
         ON us.main_group_id = gr.id

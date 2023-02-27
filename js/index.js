@@ -47,14 +47,16 @@ function insertUser() {
 
 //Show user --------------------------
 
-function display() {
+function display(page = 1) {
   $.ajax({
     url: "view.php",
-    method: "post",
+    method: "get",
+    data : {page},
     success: function (data) {
       data = JSON.parse(data);
       if (data.status == "success") {
         $("#table").html(data.html);
+        $("#pagination").html(data.pagination);
       }
     },
   });
@@ -132,9 +134,10 @@ function searchUser() {
       url: "searchUser.php",
       method: "post",
       data: { storeS: storeSearch, groupS: groupSearch },
-      success: function (data) {
-        if (data.status == "success") {
-          $("#tableSearch").html(data.html);
+      success: function (res) {
+        res = JSON.parse(res);
+        if (res.status == "success") {
+          $("#table").html(res.html);
         }
       },
     });
