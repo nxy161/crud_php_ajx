@@ -10,6 +10,8 @@ function insertUser()
     $userBirthday = $_POST['users'][0]['userBirthday'];
     $userStore = $_POST['users'][0]['userStore'];
     $userGroup = $_POST['users'][0]['userGroup'];
+    // $userImg = $_POST['users'][0]['userImg'];
+    die(print_r($_FILES));
     $formatuserDate = date('Y-m-d', strtotime($userBirthday));
     $queryInsertUser = "insert into users (name,birthday,address,main_group_id,main_store_id) 
      values('$userName','$formatuserDate','$userAddress','$userGroup','$userStore')";
@@ -79,7 +81,7 @@ function showUser()
 
     if ($page > 1) {
         $pagination .= '<li class="page-item ">
-                    <a href="javascript:void(0)" onclick="display(' . $page -1 . ')" class="page-link">Previous</a></li>';
+                    <a href="javascript:void(0)" onclick="display(' . $page - 1 . ')" class="page-link">Previous</a></li>';
     }
     for ($i = 1; $i <= ceil($numCol / 10); $i++) {
         $pagination  .= '<li class="page-item" id="' . $i . '"><a href="javascript:void(0)" onclick="display(' . $i . ')" class="page-link">' . $i . '</a></li>';

@@ -26,7 +26,7 @@ include './include/connect.php'
 
 
     <!-- Modal Add User -->
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="modal fade" id="add_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">
@@ -74,6 +74,13 @@ include './include/connect.php'
                             echo '</select>';
                             ?>
                         </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <input id="image" type="file" name="img" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="">Hình ảnh</span>
+                            <div id="showImage"></div>
+                        </div>
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn_close" data-bs-dismiss="modal">Đóng</button>
@@ -89,7 +96,7 @@ include './include/connect.php'
 
 
     <!-- Modal Edit User -->
-    <form method="post">
+    <form method="post" enctype="multipart/form-data">
         <div class="modal fade" id="edit_user" tabindex="-1" aria-labelledby="exampleModalLabel" aria-hidden="true">
             <div class="modal-dialog modal-lg">
                 <div class="modal-content">

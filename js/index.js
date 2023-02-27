@@ -10,6 +10,7 @@ $(document).ready(function () {
 //Insert user --------------------------
 function insertUser() {
   $(document).on("click", "#btn_submit_add", function () {
+    
     var users = [
       {
         userName: $("#UserName").val(),
@@ -17,6 +18,7 @@ function insertUser() {
         userBirthday: $("#userDateOfBirth").val(),
         userStore: $("#store").val(),
         userGroup: $("#group").val(),
+        userImg: $('#image')[0].files
       },
     ];
     if (
