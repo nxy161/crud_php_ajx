@@ -10,6 +10,11 @@ include './include/connect.php'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="/css/bootstrap.min.css">
     <link rel="stylesheet" href="/css/fontawesome-free-6.3.0-web/css/all.min.css">
+    <script>
+        if (window.history.replaceState) {
+            window.history.replaceState(null, null, window.location.href);
+        }
+    </script>
     <title>Document</title>
 </head>
 
@@ -74,13 +79,7 @@ include './include/connect.php'
                             echo '</select>';
                             ?>
                         </div>
-                        <div class="input-group input-group-sm mb-3">
-                            <input id="image" type="file" name="img" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
-                        </div>
-                        <div class="input-group input-group-sm mb-3">
-                            <span class="">Hình ảnh</span>
-                            <div id="showImage"></div>
-                        </div>
+
                     </div>
                     <div class="modal-footer">
                         <button type="button" class="btn btn-danger btn_close" data-bs-dismiss="modal">Đóng</button>
@@ -150,6 +149,15 @@ include './include/connect.php'
                                 }
                                 ?>
                             </select>
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <input autocomplete="off" id="image" type="file" multiple name="img[]" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                        </div>
+                        <div class="input-group input-group-sm mb-3">
+                            <span class="">Hình ảnh</span>
+                            <div id="showImage">
+
+                            </div>
                         </div>
                     </div>
                     <div class="modal-footer">

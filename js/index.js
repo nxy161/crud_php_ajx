@@ -5,12 +5,12 @@ $(document).ready(function () {
   editUser();
   deleteUser();
   searchUser();
+  delimage();
 });
 
 //Insert user --------------------------
 function insertUser() {
   $(document).on("click", "#btn_submit_add", function () {
-    
     var users = [
       {
         userName: $("#UserName").val(),
@@ -18,7 +18,6 @@ function insertUser() {
         userBirthday: $("#userDateOfBirth").val(),
         userStore: $("#store").val(),
         userGroup: $("#group").val(),
-        userImg: $('#image')[0].files
       },
     ];
     if (
@@ -53,7 +52,7 @@ function display(page = 1) {
   $.ajax({
     url: "view.php",
     method: "get",
-    data : {page},
+    data: { page },
     success: function (data) {
       data = JSON.parse(data);
       if (data.status == "success") {
@@ -69,41 +68,57 @@ function display(page = 1) {
 function showEditUser() {
   $(document).on("click", "#btn_edit", function () {
     var ID = $(this).attr("data-id");
+    $("#edit_user").modal("show");
     $.ajax({
       url: "showEditUser.php",
       method: "post",
       data: { userID: ID },
       dataType: "JSON",
       success: function (data) {
-        $("#Edit_UserName").val(data[0]);
-        $("#Edit_UserAddress").val(data[1]);
-        $("#Edit_userDateOfBirth").val(data[2]);
-        $("#idEdit").val(data[5]);
+        $("#Edit_UserName").val(data["data"][0]);
+        $("#Edit_UserAddress").val(data["data"][1]);
+        $("#Edit_userDateOfBirth").val(data["data"][2]);
+        $("#idEdit").val(data["data"][5]);
+        $("#showImage").html(data["img"]);
       },
     });
   });
+  const myModalEl = document.getElementById("edit_user");
+  myModalEl.addEventListener("hidden.bs.modal", () => {
+    $("form").trigger("reset");
+  });
 }
 function editUser() {
-  $(document).on("click", "#btn_submit_edit", function () {
-    var editId = $("#idEdit").val();
-    var nameId = $("#Edit_UserName").val();
-    var addressId = $("#Edit_UserAddress").val();
-    var birthId = $("#Edit_userDateOfBirth").val();
-    var storeId = $("#Edit_store").val();
-    var groupId = $("#Edit_group").val();
+  $(document).on("click", "#btn_submit_edit", function (e) {
+    e.preventDefault();
+    var form_data = new FormData();
+    var lenObjImg = $("#image")[0].files.length;
+
+    // console.log(lenObjImg);
+    // console.log($('#image')[0].files);
+    // var userImg = [];
+    for (let index = 0; index < lenObjImg; index++) {
+      // form_data.set("my_img_" + index, $("#image")[0].files[index]);
+      form_data.append("my_img[]", $("#image")[0].files[index]);
+    }
+
+    form_data.append("lenObjImg", lenObjImg);
+    form_data.append("editId", $("#idEdit").val());
+    form_data.append("nameId", $("#Edit_UserName").val());
+    form_data.append("addressId", $("#Edit_UserAddress").val());
+    form_data.append("birthId", $("#Edit_userDateOfBirth").val());
+    form_data.append("storeId", $("#Edit_store").val());
+    form_data.append("groupId", $("#Edit_group").val());
     $.ajax({
       url: "editUser.php",
       method: "post",
-      data: {
-        eid: editId,
-        nid: nameId,
-        aid: addressId,
-        bid: birthId,
-        sid: storeId,
-        gid: groupId,
-      },
+      data: form_data,
+      contentType: false,
+      processData: false,
       success: function (data) {
         $("#message").html(data);
+        // showEditUser();
+        $("#edit_user").modal("hide");
         display();
       },
     });
@@ -113,7 +128,6 @@ function deleteUser() {
   $(document).on("click", "#btn_remove", function () {
     var ID = $(this).attr("data-id");
     $("#deleteUser").modal("show");
-
     $(document).on("click", "#btn_submit_delete", function () {
       $.ajax({
         url: "deleteUser.php",
@@ -142,6 +156,17 @@ function searchUser() {
           $("#table").html(res.html);
         }
       },
+    });
+  });
+}
+function delimage() {
+  $(document).on("click", "#deleteIMG", function () {
+    var IdDel = $(this).attr("data-id");
+    $.ajax({
+      url: "deleteIMG.php",
+      method: "post",
+      data: { imgID: IdDel },
+      success: function () {},
     });
   });
 }

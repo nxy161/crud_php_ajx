@@ -10,8 +10,6 @@ function insertUser()
     $userBirthday = $_POST['users'][0]['userBirthday'];
     $userStore = $_POST['users'][0]['userStore'];
     $userGroup = $_POST['users'][0]['userGroup'];
-    // $userImg = $_POST['users'][0]['userImg'];
-    die(print_r($_FILES));
     $formatuserDate = date('Y-m-d', strtotime($userBirthday));
     $queryInsertUser = "insert into users (name,birthday,address,main_group_id,main_store_id) 
      values('$userName','$formatuserDate','$userAddress','$userGroup','$userStore')";
@@ -70,7 +68,7 @@ function showUser()
                         <td >' . ($row['description'] == null ? '----' : $row['description']) . '</td> 
                         <<td>' . date('\N\g\à\y\ d \-\ m \-\ Y \L\ú\c\ H:i:s', strtotime($row['created'])) . '</td>
                         <td>
-                        <button class="btn btn-group" id="btn_edit" data-bs-toggle="modal" data-bs-target="#edit_user" data-id="' . $row['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></button>
+                        <button class="btn btn-group" id="btn_edit" data-id="' . $row['id'] . '"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></button>
                         <button class="btn btn-group" id="btn_remove"  data-id="' . $row['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></button></td>
                        </tr>';
     }
@@ -122,18 +120,58 @@ function showEidtUser()
         $userUpdate[4] = $row['description'];
         $userUpdate[5] = $row['id'];
     }
-    echo json_encode($userUpdate);
+
+    $rs = mysqli_query($conn, "SELECT * FROM user_profiles  where user_id = '$userID'");
+    $value = '';
+    $value .=     '<tr style="border: 1px solid #000;">';
+    while ($row = mysqli_fetch_assoc($rs)) {
+        $value .=     '<td> <img src="img/' . $row["image"] . '" style="margin: 20px; width: 150px; height: 150px;" title="' . $row['image'] . '"> </td>';
+        $value .=   ' <td><button id="deleteIMG" data-id="' . $row['id'] . '" class="btn btn-group"><i class="fa-solid fa-trash" style="color:red;"></i></button></td>';
+    }
+    $value .= '</tr>';
+    echo json_encode(['data' => $userUpdate, 'img' => $value]);
 }
 function editUser()
 {
     global $conn;
-    $editID = $_POST['eid'];
-    $editName = $_POST['nid'];
-    $editAddress = $_POST['aid'];
-    $tamBirth = $_POST['bid'];
+    $editID = $_POST['editId'];
+    $editName = $_POST['nameId'];
+    $editAddress = $_POST['addressId'];
+    $tamBirth = $_POST['birthId'];
     $editBirth = date('Y-m-d', strtotime($tamBirth));
-    $editStore = $_POST['sid'];
-    $editGroup = $_POST['gid'];
+    $editStore = $_POST['storeId'];
+    $editGroup = $_POST['groupId'];
+    $lenObjImg = $_POST['lenObjImg'];
+    // echo '<pre>';
+    // var_dump($_FILES["my_img"]);
+    // die();
+    for ($i = 0; $i < $lenObjImg; $i++) {
+        if (isset($_FILES['my_img']['name'])) {
+            $fileName = $_FILES['my_img']['name'][$i];
+            $fileSize = $_FILES['my_img']['size'][$i];
+            $tmpName = $_FILES['my_img']['tmp_name'][$i];
+            $validImage = ['jpg', 'jpge', 'png'];
+            $imageEx = explode('.', $fileName);
+            $imageEx = strtolower(end($imageEx));
+            if (!in_array($imageEx, $validImage)) {
+                echo "<script>alert('Invalid Image');</script>";
+            } elseif ($fileSize > 10000000000) {
+                echo "<script>alert('Image too large');</script>";
+            } else {
+                $newImg = uniqid();
+                $newImg .= '.' . $imageEx;
+                move_uploaded_file($tmpName, 'img/' . $newImg);
+                $queryUpload = "Insert into user_profiles (user_id, image) VALUES ('$editID', '$newImg' )";
+                mysqli_query($conn, $queryUpload);
+            }
+        } else {
+            $err = 'Ảnh bị lỗi! Vui lòng thử lại';
+            $error = array('Error' => 1, 'Error' => $err);
+            echo json_encode($error);
+            exit();
+        }
+    }
+
     $queryEditUser = "  update users
                         set name='$editName', address='$editAddress', birthday = '$editBirth',
                         main_group_id='$editGroup',main_store_id='$editStore' 
@@ -145,6 +183,7 @@ function editUser()
         echo "Error: " . $queryEditUser . "<br>" . mysqli_error($conn);
     }
 }
+
 function deleteUser()
 {
     global $conn;
@@ -232,4 +271,16 @@ function searchUser()
     $value .= '</tbody>';
 
     echo json_encode(['status' => 'success', 'html' => $value]);
+}
+function delImg()
+{
+    global $conn;
+    $deleteID = $_POST['imgID'];
+    $queryDeleteImg = "delete from user_profiles where id = $deleteID";
+    $result = mysqli_query($conn, $queryDeleteImg);
+    if ($result) {
+        echo "<script>alert('Xóa thành công!')</script>";
+    } else {
+        echo "Error: " . $queryDeleteImg . "<br>" . mysqli_error($conn);
+    }
 }
