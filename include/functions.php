@@ -29,19 +29,19 @@ function showUser()
 {
     global $conn;
 
-    $value = '<thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tên</th>
-                            <th scope="col">Địa chỉ</th>
-                            <th scope="col">Ngày sinh</th>
-                            <th scope="col">Chi nhánh</th>
-                            <th scope="col">Phòng ban</th>
-                            <th scope="col">Thơi gian tạo</th>
-                            <th scope="col">Chức năng</th>
-                        </tr>
-                </thead>
-                <tbody>';
+    // $value = '<thead>
+    //                     <tr>
+    //                         <th scope="col">STT</th>
+    //                         <th scope="col">Tên</th>
+    //                         <th scope="col">Địa chỉ</th>
+    //                         <th scope="col">Ngày sinh</th>
+    //                         <th scope="col">Chi nhánh</th>
+    //                         <th scope="col">Phòng ban</th>
+    //                         <th scope="col">Thơi gian tạo</th>
+    //                         <th scope="col">Chức năng</th>
+    //                     </tr>
+    //             </thead>
+    //             <tbody>';
     $queryShowALl = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
                     FROM users AS us 
                     LEFT JOIN groups as gr 
@@ -58,10 +58,10 @@ function showUser()
         us.id,
         us.name,
         us.address,
-        CONCAT('Ngay ', DATE_FORMAT(us.birthday, '%d'), ' Thang ',DATE_FORMAT(us.birthday, '%m'), ' Nam ', DATE_FORMAT(us.birthday, '%Y') ) as birthday,
+        CONCAT('Ngày ', DATE_FORMAT(us.birthday, '%d'), ' Tháng ',DATE_FORMAT(us.birthday, '%m'), ' Năm ', DATE_FORMAT(us.birthday, '%Y') ) as birthday,
         st.name as strname,
         gr.description,
-        us.created 
+        CONCAT('Lúc ', DATE_FORMAT(us.created, '%d-%m-%Y %H:%i:%s')) as created
     FROM users AS us 
     LEFT JOIN groups as gr 
     ON us.main_group_id = gr.id
@@ -234,19 +234,19 @@ function deleteUser()
 function searchUser()
 {
     global $conn;
-    $value = '<thead>
-                        <tr>
-                            <th scope="col">STT</th>
-                            <th scope="col">Tên</th>
-                            <th scope="col">Địa chỉ</th>
-                            <th scope="col">Ngày sinh</th>
-                            <th scope="col">Chi nhánh</th>
-                            <th scope="col">Phòng ban</th>
-                            <th scope="col">Thơi gian tạo</th>
-                            <th scope="col">Chức năng</th>
-                        </tr>
-                </thead>
-                <tbody>';
+    // $value = '<thead>
+    //                     <tr>
+    //                         <th scope="col">STT</th>
+    //                         <th scope="col">Tên</th>
+    //                         <th scope="col">Địa chỉ</th>
+    //                         <th scope="col">Ngày sinh</th>
+    //                         <th scope="col">Chi nhánh</th>
+    //                         <th scope="col">Phòng ban</th>
+    //                         <th scope="col">Thơi gian tạo</th>
+    //                         <th scope="col">Chức năng</th>
+    //                     </tr>
+    //             </thead>
+    //             <tbody>';
     $searchStore = $_POST['storeS'];
     $searchGroup = $_POST['groupS'];
     $querySearchShow = "SELECT us.id, 
@@ -289,6 +289,7 @@ function searchUser()
         $querySearchShow = $querySearch;
     }
     $result = mysqli_query($conn, $querySearchShow);
+    $value='';
     while ($row = mysqli_fetch_assoc($result)) {
         $value .= ' <tr>
                         <th scope="row"> ' . $row['id'] . ' </th>
@@ -303,7 +304,7 @@ function searchUser()
                         <button class="btn btn-group" id="btn_remove"  data-id="' . $row['id'] . '"><i class="fa-solid fa-trash" style="color:red;"></i></button></td>
                        </tr>';
     }
-    $value .= '</tbody>';
+    // $value .= '</tbody>';
 
     echo json_encode(['status' => 'success', 'html' => $value]);
 }
