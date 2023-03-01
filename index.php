@@ -10,6 +10,7 @@ include './include/connect.php'
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <link rel="stylesheet" href="./css/bootstrap.min.css">
     <link rel="stylesheet" href="./css/fontawesome-free-6.3.0-web/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -122,14 +123,14 @@ include './include/connect.php'
                             <span class="input-group-text" id="inputGroup-sizing-sm">Chi nhánh</span>
                             <select id="Edit_store" name="store" value="" class="form-select" aria-label="Default select example">
                                 <?php
-                                
+
                                 $querySelectStore = mysqli_query($conn, "(SELECT name FROM stores)");
                                 $i = 1;
                                 while ($row = mysqli_fetch_assoc($querySelectStore)) {
                                     // if ($row['name']) {
                                     // echo '<option selected value="' . $i . '">' . $row['name'] . '</option>';
                                     // } else {
-                                    echo '<option  value="' .$i . '">' . $row['name'] . '</option>';
+                                    echo '<option  value="' . $i . '">' . $row['name'] . '</option>';
                                     // }
 
                                     $i++;
@@ -151,13 +152,16 @@ include './include/connect.php'
                             </select>
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <input autocomplete="off" id="image" type="file" multiple name="img[]" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            <input autocomplete="off" onchange="previewIMG(event)" id="image" type="file" multiple name="img[]" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <span class="">Hình ảnh</span>
+                            <span style="margin-right: 20px;">Hình ảnh</span>
                             <div id="showImage">
 
                             </div>
+                        </div>
+                        <div id="preview">
+                            <div style="display: none;" id="remove_img_upload"><i class="fas fa fa-times"></i></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -286,6 +290,23 @@ include './include/connect.php'
             myInput.focus()
 
         });
+
+        function previewIMG(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var imageDiv = $('#preview');
+            var showdiv = $('#showImage');
+            var newimg = document.createElement('img');
+            newimg.src = image;
+            newimg.width = '50';
+            newimg.height = '50';
+            
+            // var delimg = document.createElement('i');
+            // delimg.class = 'fas fa fa-times';
+            imageDiv.append(newimg);
+            // imageDiv.append(delimg);
+            
+        }
+       
     </script>
 </body>
 

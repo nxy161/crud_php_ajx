@@ -58,6 +58,7 @@ function display(page = 1) {
       if (data.status == "success") {
         $("#table").html(data.html);
         $("#pagination").html(data.pagination);
+        $("#preview").html("");
       }
     },
   });
@@ -163,13 +164,22 @@ function searchUser() {
   });
 }
 function delimage() {
-  $(document).on("click", "#deleteIMG", function () {
+  $(document).on("click", "#deleteIMG", function (e) {
+    e.preventDefault();
     var IdDel = $(this).attr("data-id");
     $.ajax({
       url: "deleteIMG.php",
       method: "post",
       data: { imgID: IdDel },
-      success: function () {},
+      success: function () {
+        // $("#edit_user").modal("hide");
+        var tdremove = $('#td_img_id').attr('data-id');
+        if (tdremove == IdDel) {
+            $('#td_img_id').remove();
+        }
+        display();
+        Swal.fire("Xoá Thành Công!", "", "success");
+      },
     });
   });
 }
