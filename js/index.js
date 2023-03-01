@@ -56,14 +56,32 @@ function display(page = 1) {
     success: function (data) {
       data = JSON.parse(data);
       if (data.status == "success") {
-        $("#table").html(data.html);
+        // $("#table").html(data.html);
         $("#pagination").html(data.pagination);
         $("#preview").html("");
+        showDisplay(data.result);
       }
     },
   });
 }
-
+// showwwww userrrr
+function showDisplay(result) {
+  var value;
+  for (let index = 0; index < result.length; index++) {
+    value += `<tr>
+    <td scope="row">${result[index].id}</td>
+    <td>${result[index].name}</td>
+    <td>${result[index].address}</td>
+    <td>${result[index].birthday}</td>
+    <td>${result[index].strname}</td>
+    <td>${result[index].description}</td>
+    <td>${result[index].created}</td>
+    <td><button class="btn btn-group" id="btn_edit" data-id="${result[index].id}"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></button>
+    <button class="btn btn-group" id="btn_remove"  data-id="${result[index].id}"><i class="fa-solid fa-trash" style="color:red;"></i></button></td>
+    </tr>`;
+  }  
+  $('#table').html(value);
+}
 //Edit user --------------------------
 
 function showEditUser() {
@@ -172,11 +190,11 @@ function delimage() {
       method: "post",
       data: { imgID: IdDel },
       success: function () {
-        // $("#edit_user").modal("hide");
-        var tdremove = $('#td_img_id').attr('data-id');
-        if (tdremove == IdDel) {
-            $('#td_img_id').remove();
-        }
+        $("#edit_user").modal("hide");
+        // var tdremove = $('#td_img_id').attr('data-id');
+        // if (tdremove == IdDel) {
+        //     $('#td_img_id').remove();
+        // }
         display();
         Swal.fire("Xoá Thành Công!", "", "success");
       },

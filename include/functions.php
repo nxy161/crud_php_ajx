@@ -54,7 +54,14 @@ function showUser()
     $page = (isset($_GET['page'])) ? $_GET['page'] : 1;
     $limit = 10;
     $offset = ($page - 1) * $limit;
-    $queryShow = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
+    $queryShow = "  SELECT 
+        us.id,
+        us.name,
+        us.address,
+        CONCAT('Ngay ', DATE_FORMAT(us.birthday, '%d'), ' Thang ',DATE_FORMAT(us.birthday, '%m'), ' Nam ', DATE_FORMAT(us.birthday, '%Y') ) as birthday,
+        st.name as strname,
+        gr.description,
+        us.created 
     FROM users AS us 
     LEFT JOIN groups as gr 
     ON us.main_group_id = gr.id
@@ -62,6 +69,12 @@ function showUser()
     ON us.main_store_id  = st.id
     Limit $limit offset $offset";
     $result = mysqli_query($conn, $queryShow);
+    // $row = mysqli_free_result($result);
+    $row = array();
+    // print_r(mysqli_fetch_assoc($result));
+    while ($rows = mysqli_fetch_assoc($result)) {
+        array_push($row, $rows);
+    }
     // while ($row = mysqli_fetch_assoc($result)) {
     //     $value .= ' <tr>
     //                     <th scope="row"> ' . $row['id'] . ' </th>
@@ -97,7 +110,8 @@ function showUser()
     $pagination .= '</ul>
                 </nav>
                 ';
-    echo json_encode(['status' => 'success', 'html' => $result, 'pagination' => $pagination]);
+    // echo json_encode(['status' => 'success', 'html' => $result, 'pagination' => $pagination]);
+    echo json_encode(['status' => 'success', 'result' => $row, 'pagination' => $pagination]);
 }
 //<button class="btn btn-group" id="btn_view" data-id="' . $row['id'] . '"><i class="fa-solid fa-eye" style="color:blue;"></i></button>
 
@@ -133,7 +147,7 @@ function showEidtUser()
         $value .=     '<td id="td_img_id" data-id="' . $row['id'] . '"> <img src="img/' . $row["image"] . '" style=" width: 50px; height: 50px;" title="' . $row['image'] . '"> </td>';
         $value .=   ' <td ><button id="deleteIMG" data-id="' . $row['id'] . '" class="btn btn-group"><i class="fa-solid fa-trash" style="color:red;"></i></button></td>';
     }
-    $value .= '</tr>';  
+    $value .= '</tr>';
     echo json_encode(['data' => $userUpdate, 'img' => $value]);
 }
 function editUser()

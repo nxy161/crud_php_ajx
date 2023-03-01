@@ -225,8 +225,22 @@ include './include/connect.php'
         </div>
     </form>
     <div class="table m-3">
-        <table id="table" class="table">
+        <table  class="table">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Ngày sinh</th>
+                    <th scope="col">Chi nhánh</th>
+                    <th scope="col">Phòng ban</th>
+                    <th scope="col">Thơi gian tạo</th>
+                    <th scope="col">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody id="table">
 
+            </tbody>
         </table>
         <div id="pagination"></div>
     </div>
@@ -299,14 +313,13 @@ include './include/connect.php'
             newimg.src = image;
             newimg.width = '50';
             newimg.height = '50';
-            
+
             // var delimg = document.createElement('i');
             // delimg.class = 'fas fa fa-times';
             imageDiv.append(newimg);
             // imageDiv.append(delimg);
-            
+
         }
-       
     </script>
 </body>
 
