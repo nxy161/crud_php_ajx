@@ -75,11 +75,13 @@ function showEditUser() {
       data: { userID: ID },
       dataType: "JSON",
       success: function (data) {
-        $("#Edit_UserName").val(data["data"][0]);
-        $("#Edit_UserAddress").val(data["data"][1]);
-        $("#Edit_userDateOfBirth").val(data["data"][2]);
-        $("#idEdit").val(data["data"][5]);
+        $("#Edit_UserName").val(data["data"]["name"]);
+        $("#Edit_UserAddress").val(data["data"]["address"]);
+        $("#Edit_userDateOfBirth").val(data["data"]["birthday"]);
+        $("#idEdit").val(data["data"]["userID"]);
         $("#showImage").html(data["img"]);
+        $("#Edit_store").val(data["data"]["storeID"]).change();
+        $("#Edit_group").val(data["data"]["groupID"]).change();
       },
     });
   });
@@ -154,6 +156,7 @@ function searchUser() {
         res = JSON.parse(res);
         if (res.status == "success") {
           $("#table").html(res.html);
+          $("#pagination").html("");
         }
       },
     });

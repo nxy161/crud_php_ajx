@@ -103,7 +103,8 @@ function showEidtUser()
 {
     global $conn;
     $userID = $_POST['userID'];
-    $queryShowEditUser = "  SELECT us.id, us.name, us.address, us.birthday, st.name as strname, gr.description, us.created 
+    $queryShowEditUser = "  SELECT us.main_group_id as grid , us.main_store_id as stid, us.id, us.name, us.address,
+                        us.birthday, st.name as strname, gr.description, us.created 
                         FROM users AS us 
                         LEFT JOIN groups as gr 
                         ON us.main_group_id = gr.id
@@ -113,12 +114,12 @@ function showEidtUser()
 
     $result = mysqli_query($conn, $queryShowEditUser);
     while ($row = mysqli_fetch_assoc($result)) {
-        $userUpdate[0] = $row['name'];
-        $userUpdate[1] = $row['address'];
-        $userUpdate[2] = $row['birthday'];
-        $userUpdate[3] = $row['strname'];
-        $userUpdate[4] = $row['description'];
-        $userUpdate[5] = $row['id'];
+        $userUpdate['name'] = $row['name'];
+        $userUpdate['address'] = $row['address'];
+        $userUpdate['birthday'] = $row['birthday'];
+        $userUpdate['storeID'] = $row['stid'];
+        $userUpdate['groupID'] = $row['grid'];
+        $userUpdate['userID'] = $row['id'];
     }
 
     $rs = mysqli_query($conn, "SELECT * FROM user_profiles  where user_id = '$userID'");
