@@ -8,8 +8,14 @@ include './include/connect.php'
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
+<<<<<<< HEAD
     <link rel="stylesheet" href="../css/bootstrap.min.css">
     <link rel="stylesheet" href="../css/fontawesome-free-6.3.0-web/css/all.min.css">
+=======
+    <link rel="stylesheet" href="./css/bootstrap.min.css">
+    <link rel="stylesheet" href="./css/fontawesome-free-6.3.0-web/css/all.min.css">
+    <script src="https://cdn.jsdelivr.net/npm/sweetalert2@11"></script>
+>>>>>>> 785b264d122614d3c53404513982a9a065373d4a
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -151,13 +157,16 @@ include './include/connect.php'
                             </select>
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <input autocomplete="off" id="image" type="file" multiple name="img[]" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
+                            <input autocomplete="off" onchange="previewIMG(event)" id="image" type="file" multiple name="img[]" class="form-control" aria-label="Sizing example input" aria-describedby="inputGroup-sizing-sm">
                         </div>
                         <div class="input-group input-group-sm mb-3">
-                            <span class="">Hình ảnh</span>
+                            <span style="margin-right: 20px;">Hình ảnh</span>
                             <div id="showImage">
 
                             </div>
+                        </div>
+                        <div id="preview">
+                            <div style="display: none;" id="remove_img_upload"><i class="fas fa fa-times"></i></div>
                         </div>
                     </div>
                     <div class="modal-footer">
@@ -221,8 +230,22 @@ include './include/connect.php'
         </div>
     </form>
     <div class="table m-3">
-        <table id="table" class="table">
+        <table  class="table">
+            <thead>
+                <tr>
+                    <th scope="col">STT</th>
+                    <th scope="col">Tên</th>
+                    <th scope="col">Địa chỉ</th>
+                    <th scope="col">Ngày sinh</th>
+                    <th scope="col">Chi nhánh</th>
+                    <th scope="col">Phòng ban</th>
+                    <th scope="col">Thơi gian tạo</th>
+                    <th scope="col">Chức năng</th>
+                </tr>
+            </thead>
+            <tbody id="table">
 
+            </tbody>
         </table>
         <div id="pagination"></div>
     </div>
@@ -232,14 +255,14 @@ include './include/connect.php'
 
 
 
-    <link rel="stylesheet" href="/css/jquery.datetimepicker.css">
-    <script src="/js/bootstrap.bundle.min.js"></script>
-    <script src="/js/bootstrap.min.js"></script>
-    <script src="/js/jquery.datetimepicker.js"></script>
-    <script src="/js/jquery.js"></script>
-    <script src="/js/jquery1.js"></script>
-    <script src="/js/index.js"></script>
-    <script src="/js/jquery.datetimepicker.full.min.js"></script>
+    <link rel="stylesheet" href="./css/jquery.datetimepicker.css">
+    <script src="./js/bootstrap.bundle.min.js"></script>
+    <script src="./js/bootstrap.min.js"></script>
+    <script src="./js/jquery.datetimepicker.js"></script>
+    <script src="./js/jquery.js"></script>
+    <script src="./js/jquery1.js"></script>
+    <script src="./js/index.js"></script>
+    <script src="./js/jquery.datetimepicker.full.min.js"></script>
     <script>
         const myModal = document.getElementById('myModal')
         const myInput = document.getElementById('myInput')
@@ -286,6 +309,22 @@ include './include/connect.php'
             myInput.focus()
 
         });
+
+        function previewIMG(event) {
+            var image = URL.createObjectURL(event.target.files[0]);
+            var imageDiv = $('#preview');
+            var showdiv = $('#showImage');
+            var newimg = document.createElement('img');
+            newimg.src = image;
+            newimg.width = '50';
+            newimg.height = '50';
+
+            // var delimg = document.createElement('i');
+            // delimg.class = 'fas fa fa-times';
+            imageDiv.append(newimg);
+            // imageDiv.append(delimg);
+
+        }
     </script>
 </body>
 

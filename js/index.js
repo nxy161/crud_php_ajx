@@ -61,13 +61,32 @@ function display(page = 1) {
     success: function (data) {
       data = JSON.parse(data);
       if (data.status == "success") {
-        $("#table").html(data.html);
+        // $("#table").html(data.html);
         $("#pagination").html(data.pagination);
+        $("#preview").html("");
+        showDisplay(data.result);
       }
     },
   });
 }
-
+// showwwww userrrr
+function showDisplay(result) {
+  var value;
+  for (let index = 0; index < result.length; index++) {
+    value += `<tr>
+    <td scope="row">${result[index].id}</td>
+    <td>${result[index].name}</td>
+    <td>${result[index].address}</td>
+    <td>${result[index].birthday}</td>
+    <td>${result[index].strname}</td>
+    <td>${result[index].description}</td>
+    <td>${result[index].created}</td>
+    <td><button class="btn btn-group" id="btn_edit" data-id="${result[index].id}"><i class="fa-solid fa-pen-to-square" style="color:blue;"></i></button>
+    <button class="btn btn-group" id="btn_remove"  data-id="${result[index].id}"><i class="fa-solid fa-trash" style="color:red;"></i></button></td>
+    </tr>`;
+  }  
+  $('#table').html(value);
+}
 //Edit user --------------------------
 
 function showEditUser() {
@@ -80,17 +99,14 @@ function showEditUser() {
       data: { userID: ID },
       dataType: "JSON",
       success: function (data) {
-        // console.log(lenObjImg);
-        // console.log($('#image')[0].files);
-        // var userImg = [];
-        ///0785
-        $("#Edit_UserName").val(data["data"]["name"]);
-        $("#Edit_UserAddress").val(data["data"]["address"]);
-        $("#Edit_userDateOfBirth").val(data["data"]["birthday"]);
-        $("#idEdit").val(data["data"]["userID"]);
+        $("#Edit_UserName").val(data["data"][0]);
+        $("#Edit_UserAddress").val(data["data"][1]);
+        $("#Edit_userDateOfBirth").val(data["data"][2]);
+        $("#idEdit").val(data["data"][5]);
         $("#showImage").html(data["img"]);
         $("#Edit_store").val(data["data"]["storeID"]).change();
         $("#Edit_group").val(data["data"]["groupID"]).change();
+        ///0785
       },
     });
   });
@@ -173,13 +189,22 @@ function searchUser() {
   });
 }
 function delimage() {
-  $(document).on("click", "#deleteIMG", function () {
+  $(document).on("click", "#deleteIMG", function (e) {
+    e.preventDefault();
     var IdDel = $(this).attr("data-id");
     $.ajax({
       url: "deleteIMG.php",
       method: "post",
       data: { imgID: IdDel },
-      success: function () {},
+      success: function () {
+        $("#edit_user").modal("hide");
+        // var tdremove = $('#td_img_id').attr('data-id');
+        // if (tdremove == IdDel) {
+        //     $('#td_img_id').remove();
+        // }
+        display();
+        Swal.fire("Xoá Thành Công!", "", "success");
+      },
     });
   });
 }
