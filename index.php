@@ -8,8 +8,8 @@ include './include/connect.php'
     <meta charset="UTF-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <link rel="stylesheet" href="/css/bootstrap.min.css">
-    <link rel="stylesheet" href="/css/fontawesome-free-6.3.0-web/css/all.min.css">
+    <link rel="stylesheet" href="../css/bootstrap.min.css">
+    <link rel="stylesheet" href="../css/fontawesome-free-6.3.0-web/css/all.min.css">
     <script>
         if (window.history.replaceState) {
             window.history.replaceState(null, null, window.location.href);
@@ -120,16 +120,16 @@ include './include/connect.php'
                         </div>
                         <div class="input-group input-group-sm mb-3">
                             <span class="input-group-text" id="inputGroup-sizing-sm">Chi nhánh</span>
-                            <select id="Edit_store" name="store" class="form-select" aria-label="Default select example">
+                            <select id="Edit_store" name="store" value="" class="form-select" aria-label="Default select example">
                                 <?php
-
+                                
                                 $querySelectStore = mysqli_query($conn, "(SELECT name FROM stores)");
                                 $i = 1;
                                 while ($row = mysqli_fetch_assoc($querySelectStore)) {
                                     // if ($row['name']) {
                                     // echo '<option selected value="' . $i . '">' . $row['name'] . '</option>';
                                     // } else {
-                                    echo '<option  value="' . $i . '">' . $row['name'] . '</option>';
+                                    echo '<option  value="' .$i . '">' . $row['name'] . '</option>';
                                     // }
 
                                     $i++;

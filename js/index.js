@@ -1,19 +1,24 @@
+///178
 $(document).ready(function () {
   insertUser();
   display();
   showEditUser();
-  editUser();
+  editUser(); ///555
   deleteUser();
+  // console.log(lenObjImg);
+  // console.log($('#image')[0].files);
+  // var userImg = [];
+  ///0785
   searchUser();
   delimage();
 });
-
 //Insert user --------------------------
 function insertUser() {
   $(document).on("click", "#btn_submit_add", function () {
     var users = [
       {
         userName: $("#UserName").val(),
+
         userAddress: $("#UserAddress").val(),
         userBirthday: $("#userDateOfBirth").val(),
         userStore: $("#store").val(),
@@ -75,11 +80,17 @@ function showEditUser() {
       data: { userID: ID },
       dataType: "JSON",
       success: function (data) {
-        $("#Edit_UserName").val(data["data"][0]);
-        $("#Edit_UserAddress").val(data["data"][1]);
-        $("#Edit_userDateOfBirth").val(data["data"][2]);
-        $("#idEdit").val(data["data"][5]);
+        // console.log(lenObjImg);
+        // console.log($('#image')[0].files);
+        // var userImg = [];
+        ///0785
+        $("#Edit_UserName").val(data["data"]["name"]);
+        $("#Edit_UserAddress").val(data["data"]["address"]);
+        $("#Edit_userDateOfBirth").val(data["data"]["birthday"]);
+        $("#idEdit").val(data["data"]["userID"]);
         $("#showImage").html(data["img"]);
+        $("#Edit_store").val(data["data"]["storeID"]).change();
+        $("#Edit_group").val(data["data"]["groupID"]).change();
       },
     });
   });
@@ -93,10 +104,10 @@ function editUser() {
     e.preventDefault();
     var form_data = new FormData();
     var lenObjImg = $("#image")[0].files.length;
-
     // console.log(lenObjImg);
     // console.log($('#image')[0].files);
     // var userImg = [];
+    /// 555
     for (let index = 0; index < lenObjImg; index++) {
       // form_data.set("my_img_" + index, $("#image")[0].files[index]);
       form_data.append("my_img[]", $("#image")[0].files[index]);
@@ -118,6 +129,7 @@ function editUser() {
       success: function (data) {
         $("#message").html(data);
         // showEditUser();
+        ///178
         $("#edit_user").modal("hide");
         display();
       },
@@ -154,6 +166,7 @@ function searchUser() {
         res = JSON.parse(res);
         if (res.status == "success") {
           $("#table").html(res.html);
+          $("#pagination").html("");
         }
       },
     });
